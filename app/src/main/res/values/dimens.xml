@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textMusicTitle">20sp</dimen>
+    <dimen name="textMusicAlbum">14sp</dimen>
+    <dimen name="textMusicLyrics">16sp</dimen>
+
+    <dimen name="textHead">20sp</dimen>
+    <dimen name="textBody">16sp</dimen>
+    <dimen name="testCaption">12sp</dimen>
+
+</resources>
