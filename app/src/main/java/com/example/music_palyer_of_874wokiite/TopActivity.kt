@@ -28,13 +28,12 @@ import androidx.compose.ui.unit.dp
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 
 class TopActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Musicpalyerof874wokiiteTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MusicListGrid()
                 }
             }
