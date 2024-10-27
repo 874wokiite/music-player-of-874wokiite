@@ -1,15 +1,25 @@
 package com.example.music_palyer_of_874wokiite
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 
@@ -38,10 +48,44 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
+@SuppressLint("RememberReturnType")
+@Composable
+fun AlbumList(coverImage:String, musicTitle: String, albumTitle:String, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
+    
+    Column {
+        bitmap.let {
+            if (it != null) {
+                Image(
+                    bitmap = it,
+                    contentDescription = null,
+                    modifier = modifier
+                )
+            }
+        }
+        Text(
+            text = musicTitle,
+            color = colorResource(id = R.color.textPrimary),
+            modifier = modifier,
+        )
+        Text(
+            text = albumTitle,
+            color = colorResource(id = R.color.textSecondary),
+            modifier = modifier,
+        )
+
+    }
+}
+
+fun loadBitmapFromAssets(context: Context, fileName: String) =
+    context.assets.open(fileName).use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     Musicpalyerof874wokiiteTheme {
         Greeting("Android")
+        AlbumList("rememberApathy.png", "Music Title", "Album Title")
     }
 }
