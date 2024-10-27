@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 
-class MainActivity : ComponentActivity() {
+class TopActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

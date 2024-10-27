@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- アプリ全体のテーマ設定 -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.MusicPlayer" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- プライマリーカラーの設定 -->
         <item name="android:colorPrimary">@color/colorPrimary</item>
 
@@ -13,17 +13,4 @@
         <item name="android:textSize">@dimen/textBody</item>
         <item name="android:lineSpacingMultiplier">1.8</item>
     </style>
-
-    <!-- Music Title用のテキストスタイル -->
-    <style name="TextStyle.MusicTitle">
-        <item name="android:textSize">@dimen/textMusicTitle</item>
-        <item name="android:textColor">@color/textPrimary</item>
-    </style>
-
-    <!-- Music Album用のテキストスタイル -->
-    <style name="TextStyle.MusicAlbum">
-        <item name="android:textSize">@dimen/textMusicAlbum</item>
-        <item name="android:textColor">@color/textSecondary</item>
-    </style>
-
 </resources>
