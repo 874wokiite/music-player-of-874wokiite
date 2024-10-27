@@ -28,12 +28,13 @@ import androidx.compose.ui.unit.dp
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 
 class TopActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Musicpalyerof874wokiiteTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) {
                     MusicListGrid()
                 }
             }
@@ -78,14 +79,23 @@ fun MusicListGrid(modifier: Modifier = Modifier) {
         columns = GridCells.Fixed(2),  // 2列で表示
         modifier = modifier
     ) {
-        items(13) { index ->
+        items(6) { index ->
             MusicContent(
                 coverImage = "rememberApathy.png",
-                musicTitle = "Music Title $index",
-                albumTitle = "Album Title",
+                musicTitle = "思い出したアパシー",
+                albumTitle = "思い出したアパシー",
                 modifier = Modifier.padding(8.dp)
             )
         }
+        items(6) { index ->
+            MusicContent(
+                coverImage = "happyReborn.png",
+                musicTitle = "Haribo(Happy reborn)",
+                albumTitle = "Happy Reborn",
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+
     }
 }
 
