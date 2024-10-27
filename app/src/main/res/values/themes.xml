@@ -11,6 +11,5 @@
 
         <!-- ウィジェットやテキストのデフォルトフォントサイズと行間の設定 -->
         <item name="android:textSize">@dimen/textBody</item>
-        <item name="android:lineSpacingMultiplier">1.8</item>
     </style>
 </resources>
