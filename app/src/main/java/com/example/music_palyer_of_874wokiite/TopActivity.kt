@@ -34,6 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
+import com.example.music_palyer_of_874wokiite.ui.MusicDetailScreen
 
 class TopActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,21 @@ class TopActivity : ComponentActivity() {
         }
     }
 }
+
+data class MusicData(
+    val coverImage: String,
+    val musicTitle: String,
+    val albumTitle: String,
+    val audioFile: String,
+)
+
+val musicList = listOf(
+    MusicData("happyReborn.png", "Haribo", "Haribo Album", "happyReborn.mp3"),
+    MusicData("xxxDay.png", "xxxDay", "xxxDay", "happyReborn.mp3"),
+    MusicData("rememberApathy.png", "思い出したアパシー", "思い出したアパシー", "rememberApathy.mp3") ,
+    MusicData("goGoGo.png", "はしろ", "xxxDay", "rememberApathy.mp3"),
+    MusicData("doku.png", "毒", "xxxDay", "happyReborn.mp3")
+)
 
 @SuppressLint("RememberReturnType")
 @Composable
@@ -79,11 +95,34 @@ fun MusicContent(coverImage:String, musicTitle: String, albumTitle:String, modif
     }
 }
 
+
+@Composable
+fun MusicListGrid(navController: NavController, modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier
+    ) {
+        items(musicList.size) { index ->
+            val musicData = musicList[index]
+            MusicContent(
+                coverImage = musicData.coverImage,
+                musicTitle = musicData.musicTitle,
+                albumTitle = musicData.albumTitle,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable {
+                        // クリックで詳細画面へ遷移
+                        navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
+                    }
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MusicApp() {
     val navController = rememberNavController()
-
 
     NavHost(
         navController = navController,
@@ -105,43 +144,25 @@ fun MusicApp() {
         ) { backStackEntry ->
             val musicTitle = backStackEntry.arguments?.getString("musicTitle") ?: ""
             val albumTitle = backStackEntry.arguments?.getString("albumTitle") ?: ""
-            // MusicContentを直接呼び出し
-            MusicContent(
-                coverImage = "rememberApathy.png", // 必要なら画像パスを渡す
-                musicTitle = musicTitle,
-                albumTitle = albumTitle,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            )
+
+            // musicListから、タイトルとアルバムに一致するアイテムを探す
+            val musicData = musicList.find { it.musicTitle == musicTitle && it.albumTitle == albumTitle }
+
+            // 見つかった場合、MusicDetailScreenを表示
+            musicData?.let {
+                MusicDetailScreen(
+                    coverImage = it.coverImage,
+                    musicTitle = it.musicTitle,
+                    albumTitle = it.albumTitle,
+                    audioFile = it.audioFile,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
 
 
-
-
-@Composable
-fun MusicListGrid(navController: NavController, modifier: Modifier = Modifier) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier
-    ) {
-        items(6) { index ->
-            MusicContent(
-                coverImage = "rememberApathy.png",
-                musicTitle = "思い出したアパシー",
-                albumTitle = "思い出したアパシー",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        // クリックで詳細画面へ遷移
-                        navController.navigate("detail/思い出したアパシー/思い出したアパシー")
-                    }
-            )
-        }
-    }
-}
 fun loadBitmapFromAssets(context: Context, fileName: String) =
     context.assets.open(fileName).use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
 
