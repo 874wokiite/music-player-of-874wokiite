@@ -35,6 +35,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.music_palyer_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 import com.example.music_palyer_of_874wokiite.ui.MusicDetailScreen
+import com.example.music_player_of_874wokiite.features.musiclist.MusicListScreen
+import com.example.music_player_of_874wokiite.features.musiclist.musicList
+
 
 class TopActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,75 +53,6 @@ class TopActivity : ComponentActivity() {
     }
 }
 
-data class MusicData(
-    val coverImage: String,
-    val musicTitle: String,
-    val albumTitle: String,
-    val audioFile: String,
-)
-
-val musicList = listOf(
-    MusicData("happyReborn.png", "Haribo", "Haribo Album", "happyReborn.mp3"),
-    MusicData("xxxDay.png", "xxxDay", "xxxDay", "happyReborn.mp3"),
-    MusicData("rememberApathy.png", "思い出したアパシー", "思い出したアパシー", "rememberApathy.mp3") ,
-    MusicData("goGoGo.png", "はしろ", "xxxDay", "rememberApathy.mp3"),
-    MusicData("doku.png", "毒", "xxxDay", "happyReborn.mp3")
-)
-
-@SuppressLint("RememberReturnType")
-@Composable
-fun MusicContent(coverImage:String, musicTitle: String, albumTitle:String, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
-    
-    Column {
-        bitmap.let {
-            if (it != null) {
-                Image(
-                    bitmap = it,
-                    contentDescription = null,
-                    modifier = modifier
-                )
-            }
-        }
-        Text(
-            text = musicTitle,
-            color = colorResource(id = R.color.textPrimary),
-            modifier = modifier,
-        )
-        Text(
-            text = albumTitle,
-            color = colorResource(id = R.color.textSecondary),
-            modifier = modifier,
-        )
-
-    }
-}
-
-
-@Composable
-fun MusicListGrid(navController: NavController, modifier: Modifier = Modifier) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier
-    ) {
-        items(musicList.size) { index ->
-            val musicData = musicList[index]
-            MusicContent(
-                coverImage = musicData.coverImage,
-                musicTitle = musicData.musicTitle,
-                albumTitle = musicData.albumTitle,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        // クリックで詳細画面へ遷移
-                        navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
-                    }
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MusicApp() {
@@ -126,12 +60,12 @@ fun MusicApp() {
 
     NavHost(
         navController = navController,
-        startDestination = "musicList",
+        startDestination = "com/example/music_palyer_of_874wokiite/features/musicList",
         enterTransition = { fadeIn() },
         exitTransition = { fadeOut() },
     ) {
-        composable("musicList") {
-            MusicListGrid(navController)
+        composable("com/example/music_palyer_of_874wokiite/features/musicList") {
+            MusicListScreen(navController)
         }
         composable(
             route = "detail/{musicTitle}/{albumTitle}",
