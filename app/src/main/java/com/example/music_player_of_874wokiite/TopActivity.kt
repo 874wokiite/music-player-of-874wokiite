@@ -20,9 +20,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 import com.example.music_player_of_874wokiite.ui.MusicDetailScreen
-import com.example.music_player_of_874wokiite.ui.theme.Musicpalyerof874wokiiteTheme
 import com.example.music_player_of_874wokiite.features.musiclist.MusicListScreen
 import com.example.music_player_of_874wokiite.features.musiclist.musicList
+import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 
 
 class TopActivity : ComponentActivity() {
@@ -35,7 +35,7 @@ class TopActivity : ComponentActivity() {
         val musicViewModel: MusicViewModel by viewModels()
 
         setContent {
-            Musicpalyerof874wokiiteTheme {
+            MusicPlayerOf874wokiiteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     // `MusicApp`に`musicViewModel`と`innerPadding`を渡す
                     MusicApp(
@@ -45,6 +45,7 @@ class TopActivity : ComponentActivity() {
                 }
             }
         }
+
     }
     override fun onDestroy() {
         super.onDestroy()
