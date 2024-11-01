@@ -7,8 +7,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import com.example.music_palyer_of_874wokiite.R
-import com.example.music_palyer_of_874wokiite.loadBitmapFromAssets
+import com.example.music_player_of_874wokiite.R
+import com.example.music_player_of_874wokiite.ui.loadBitmapFromAssets
+
 
 @SuppressLint("RememberReturnType")
 @Composable

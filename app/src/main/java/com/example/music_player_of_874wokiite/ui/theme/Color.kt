@@ -1,4 +1,4 @@
-package com.example.music_palyer_of_874wokiite.ui.theme
+package com.example.music_player_of_874wokiite.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
