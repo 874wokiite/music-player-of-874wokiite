@@ -1,4 +1,4 @@
-package com.example.music_palyer_of_874wokiite
+package com.example.music_player_of_874wokiite
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

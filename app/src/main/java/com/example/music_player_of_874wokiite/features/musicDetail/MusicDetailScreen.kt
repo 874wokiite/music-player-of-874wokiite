@@ -1,23 +1,22 @@
-package com.example.music_palyer_of_874wokiite.ui
+package com.example.music_player_of_874wokiite.ui
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import com.example.music_palyer_of_874wokiite.R
+import com.example.music_player_of_874wokiite.components.CustomButton
+import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 
 @Composable
 fun MusicDetailScreen(
@@ -25,29 +24,16 @@ fun MusicDetailScreen(
     musicTitle: String,
     albumTitle: String,
     audioFile: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    musicViewModel: MusicViewModel
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
+    val isPlaying by musicViewModel.isPlaying.observeAsState(false)
 
-    // MediaPlayerを使って音声再生
-    val mediaPlayer = remember { MediaPlayer() }
-
+    // audioFileが変わったときのみ再生を準備・開始
     LaunchedEffect(audioFile) {
-        // assetsからmp3ファイルを開いて再生
-        context.assets.openFd(audioFile).use { assetFileDescriptor ->
-            mediaPlayer.apply {
-                reset()
-                setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset, assetFileDescriptor.length)
-                prepare()
-                start() // 再生を開始
-            }
-        }
-
-//        onDispose {
-//            // クリーンアップ
-//            mediaPlayer.release()
-//        }
+        musicViewModel.prepareAndPlay(context, audioFile)
     }
 
     Column(modifier = modifier.padding(16.dp)) {
@@ -64,7 +50,21 @@ fun MusicDetailScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Now Playing: $musicTitle")
 
-
+        // 再生と停止ボタン
+        CustomButton(
+            modifier = modifier,
+            isPlaying = isPlaying,
+            onPlayClick = {
+                if (!isPlaying) {
+                    musicViewModel.resume()
+                }
+            },
+            onStopClick = {
+                if (isPlaying) {
+                    musicViewModel.pause()
+                }
+            }
+        )
     }
 }
 

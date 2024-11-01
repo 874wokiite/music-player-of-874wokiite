@@ -1,6 +1,5 @@
-package com.example.music_palyer_of_874wokiite.ui.theme
+package com.example.music_player_of_874wokiite.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

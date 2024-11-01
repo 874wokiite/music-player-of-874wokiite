@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.music_palyer_of_874wokiite"
+    namespace = "com.example.music_player_of_874wokiite"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.music_palyer_of_874wokiite"
+        applicationId = "com.example.music_player_of_874wokiite"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -51,6 +51,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation(libs.accompanist.navigation.animation)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

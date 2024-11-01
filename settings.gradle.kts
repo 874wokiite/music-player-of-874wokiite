@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "music-palyer-of-874wokiite"
+rootProject.name = "music-player-of-874wokiite"
 include(":app")
