@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.music_player_of_874wokiite.components.CustomButton
+import com.example.music_player_of_874wokiite.components.DownIconButton
 import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 
 @Composable
@@ -25,7 +26,10 @@ fun MusicDetailScreen(
     albumTitle: String,
     audioFile: String,
     modifier: Modifier = Modifier,
-    musicViewModel: MusicViewModel
+    musicViewModel: MusicViewModel,
+    onClose: () -> Unit,  // 画面を閉じるコールバック
+    onNext: () -> Unit,   // 次の曲へ進むコールバック
+    onPrevious: () -> Unit // 前の曲に戻るコールバック
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
@@ -37,6 +41,13 @@ fun MusicDetailScreen(
     }
 
     Column(modifier = modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.height(16.dp))
+        DownIconButton(
+            onClick = {
+                // MusicDetailScreenを閉じてTopActivityに戻る
+                onClose()
+            }
+        )
         bitmap?.let {
             Image(
                 bitmap = it,
@@ -59,10 +70,17 @@ fun MusicDetailScreen(
                     musicViewModel.resume()
                 }
             },
-            onStopClick = {
+            onPauseClick = {
                 if (isPlaying) {
                     musicViewModel.pause()
                 }
+            },
+            onNextClick = {
+                // 次の曲に進める
+                musicViewModel.nextTrack()  // 次の曲に進める処理を呼び出す
+            },
+            onPreviousClick = {
+                musicViewModel.previousTrack()  // 前の曲に戻る処理を呼び出す
             }
         )
     }

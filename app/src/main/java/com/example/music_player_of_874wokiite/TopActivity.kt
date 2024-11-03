@@ -91,7 +91,16 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     albumTitle = it.albumTitle,
                     audioFile = it.audioFile,
                     modifier = Modifier.fillMaxSize(),
-                    musicViewModel = musicViewModel
+                    musicViewModel = musicViewModel,
+                    onClose = {
+                        navController.popBackStack()  // TopActivityに戻る
+                    },
+                    onNext = {
+                        musicViewModel.nextTrack()  // 次の曲に進む
+                    },
+                    onPrevious = {
+                        musicViewModel.previousTrack()  // 前の曲に戻る
+                    }
                 )
             }
         }
