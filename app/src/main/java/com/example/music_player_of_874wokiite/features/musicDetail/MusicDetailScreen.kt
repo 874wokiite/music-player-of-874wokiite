@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
+import com.example.music_player_of_874wokiite.components.SeekBar
 import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 
 @Composable
@@ -29,11 +30,13 @@ fun MusicDetailScreen(
     musicViewModel: MusicViewModel,
     onClose: () -> Unit,  // 画面を閉じるコールバック
     onNext: () -> Unit,   // 次の曲へ進むコールバック
-    onPrevious: () -> Unit // 前の曲に戻るコールバック
+    onPrevious: () -> Unit, // 前の曲に戻るコールバック
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
     val isPlaying by musicViewModel.isPlaying.observeAsState(false)
+    val currentPosition by musicViewModel.currentPosition.observeAsState(0)
+    val duration by musicViewModel.duration.observeAsState(0)
 
     // audioFileが変わったときのみ再生を準備・開始
     LaunchedEffect(audioFile) {
@@ -60,6 +63,14 @@ fun MusicDetailScreen(
         Text(text = albumTitle, style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Now Playing: $musicTitle", style = MaterialTheme.typography.bodyMedium)
+
+        SeekBar(
+            currentPosition = currentPosition,
+            duration = duration,
+            onValueChange = {
+                musicViewModel.seekTo(it.toInt())
+            }
+        )
 
         // 再生と停止ボタン
         CustomButton(

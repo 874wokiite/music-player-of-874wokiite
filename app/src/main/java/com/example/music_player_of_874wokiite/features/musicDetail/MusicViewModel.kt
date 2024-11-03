@@ -1,6 +1,6 @@
 package com.example.music_player_of_874wokiite.features.musicDetail
 
-// 再生に必要なロジックやヘルパークラス
+// 再生に必要なロジックなど
 import android.app.Application
 import android.content.Context
 import android.media.MediaPlayer
@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.music_player_of_874wokiite.features.musiclist.musicList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MusicViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,8 +18,25 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val _isPlaying = MutableLiveData(false)
     val isPlaying: LiveData<Boolean> = _isPlaying
 
+    private val _currentPosition = MutableLiveData(0)
+    val currentPosition: LiveData<Int> = _currentPosition
+
+    private val _duration = MutableLiveData(0)
+    val duration: LiveData<Int> = _duration
+
     private val trackList = musicList.map { it.audioFile } // 仮のトラックリスト
     private var currentTrackIndex = 0
+
+    init {
+        mediaPlayer?.setOnPreparedListener {
+            _duration.value = it.duration
+            it.start()
+            _isPlaying.value = true
+        }
+        mediaPlayer?.setOnCompletionListener {
+            _isPlaying.value = false
+        }
+    }
 
     fun prepareAndPlay(context: Context, audioFile: String) {
         viewModelScope.launch {
@@ -26,9 +44,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
             mediaPlayer?.apply {
                 reset()
                 setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset, assetFileDescriptor.length)
-                prepare()
-                start()
-                _isPlaying.value = true  // 再生状態を更新
+                prepareAsync()
             }
             assetFileDescriptor.close()
         }
@@ -42,6 +58,10 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     fun resume() {
         mediaPlayer?.start()
         _isPlaying.value = true  // 再生状態を更新
+    }
+
+    fun seekTo(position: Int) {
+        mediaPlayer?.seekTo(position)
     }
 
     fun nextTrack() {
@@ -60,5 +80,18 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    init {
+        viewModelScope.launch {
+            while (true) {
+                mediaPlayer?.let {
+                    if (it.isPlaying) {
+                        _currentPosition.postValue(it.currentPosition)
+                    }
+                }
+                delay(50)
+            }
+        }
     }
 }
