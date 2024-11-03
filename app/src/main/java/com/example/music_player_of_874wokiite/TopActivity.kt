@@ -100,7 +100,7 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     },
                     onPrevious = {
                         musicViewModel.previousTrack()  // 前の曲に戻る
-                    }
+                    },
                 )
             }
         }
