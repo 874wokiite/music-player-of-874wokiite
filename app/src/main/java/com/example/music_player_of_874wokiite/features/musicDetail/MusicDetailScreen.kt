@@ -29,8 +29,6 @@ fun MusicDetailScreen(
     modifier: Modifier = Modifier,
     musicViewModel: MusicViewModel,
     onClose: () -> Unit,  // 画面を閉じるコールバック
-    onNext: () -> Unit,   // 次の曲へ進むコールバック
-    onPrevious: () -> Unit, // 前の曲に戻るコールバック
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
