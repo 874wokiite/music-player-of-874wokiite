@@ -17,24 +17,24 @@ import androidx.compose.ui.Modifier
 fun CustomButton(
     modifier: Modifier = Modifier,
     isPlaying: Boolean,
-    onNextClick: () -> Unit,
-    onPreviousClick: () -> Unit,
-    onPlayClick: () -> Unit,
-    onPauseClick: () -> Unit
+    onNext: () -> Unit,
+    onPrevious: () -> Unit,
+    onPlay: () -> Unit,
+    onPause: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         // 前の曲ボタン
-        SkipPreviousButton(modifier = Modifier, onClick = onPreviousClick)
+        SkipPreviousButton(modifier = Modifier, onClick = onPrevious)
         // isPlayingの状態によって再生か停止ボタンを表示
         if (isPlaying) {
-            PauseButton(modifier = Modifier, onClick = onPauseClick)
+            PauseButton(modifier = Modifier, onClick = onPause)
         } else {
-            PlayButton(modifier = Modifier, isPlaying = isPlaying, onClick = onPlayClick)
+            PlayButton(modifier = Modifier, isPlaying = isPlaying, onClick = onPlay)
         }
         // 次の曲ボタン
-        SkipNextButton(modifier = Modifier, onClick = onNextClick)
+        SkipNextButton(modifier = Modifier, onClick = onNext)
     }
 }
 

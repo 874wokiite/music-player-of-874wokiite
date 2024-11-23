@@ -28,11 +28,15 @@ fun MusicDetailScreen(
     audioFile: String,
     modifier: Modifier = Modifier,
     musicViewModel: MusicViewModel,
+    isPlaying: Boolean,
+    onPlay: () -> Unit,  // 再生開始コールバック
+    onPause: () -> Unit,  // 再生停止コールバック
     onClose: () -> Unit,  // 画面を閉じるコールバック
+    onNext: () -> Unit,  // 次の曲に進めるコールバック
+    onPrevious: () -> Unit,  // 前の曲に戻るコールバック
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
-    val isPlaying by musicViewModel.isPlaying.observeAsState(false)
     val currentPosition by musicViewModel.currentPosition.observeAsState(0)
     val duration by musicViewModel.duration.observeAsState(0)
 
@@ -44,10 +48,7 @@ fun MusicDetailScreen(
     Column(modifier = modifier.padding(16.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
         DownIconButton(
-            onClick = {
-                // MusicDetailScreenを閉じてTopActivityに戻る
-                onClose()
-            }
+            onClick = { onClose() }
         )
         bitmap?.let {
             Image(
@@ -74,23 +75,10 @@ fun MusicDetailScreen(
         CustomButton(
             modifier = modifier,
             isPlaying = isPlaying,
-            onPlayClick = {
-                if (!isPlaying) {
-                    musicViewModel.resume()
-                }
-            },
-            onPauseClick = {
-                if (isPlaying) {
-                    musicViewModel.pause()
-                }
-            },
-            onNextClick = {
-                // 次の曲に進める
-                musicViewModel.nextTrack()  // 次の曲に進める処理を呼び出す
-            },
-            onPreviousClick = {
-                musicViewModel.previousTrack()  // 前の曲に戻る処理を呼び出す
-            }
+            onPlay = { onPlay() },
+            onPause = { onPause() },
+            onNext = { onNext() },
+            onPrevious = { onPrevious() }
         )
     }
 }
