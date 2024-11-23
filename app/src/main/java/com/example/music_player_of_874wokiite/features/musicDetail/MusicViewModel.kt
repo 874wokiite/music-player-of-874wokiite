@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.music_player_of_874wokiite.features.musiclist.musicList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,16 +65,35 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         mediaPlayer?.seekTo(position)
     }
 
-    fun nextTrack() {
+    fun nextTrack(navController: NavController) {
         currentTrackIndex = (currentTrackIndex + 1) % trackList.size
         val nextMusic = musicList[currentTrackIndex]
+
+        // 次の曲を再生準備
         prepareAndPlay(getApplication(), nextMusic.audioFile)
+
+        // NavControllerを使って次の曲の画面に遷移
+        navController.navigate("detail/${nextMusic.musicTitle}/${nextMusic.albumTitle}") {
+            // 現在の画面スタックをクリアして戻らないようにする
+            popUpTo("detail/${nextMusic.musicTitle}/${nextMusic.albumTitle}") {
+                inclusive = true
+            }
+        }
     }
 
-    fun previousTrack() {
+    fun previousTrack(navController: NavController) {
         currentTrackIndex = if (currentTrackIndex - 1 < 0) trackList.size - 1 else currentTrackIndex - 1
         val previousMusic = musicList[currentTrackIndex]
+        // 次の曲を再生準備
         prepareAndPlay(getApplication(), previousMusic.audioFile)
+
+        // NavControllerを使って次の曲の画面に遷移
+        navController.navigate("detail/${previousMusic.musicTitle}/${previousMusic.albumTitle}") {
+            // 現在の画面スタックをクリアして戻らないようにする
+            popUpTo("detail/${previousMusic.musicTitle}/${previousMusic.albumTitle}") {
+                inclusive = true
+            }
+        }
     }
 
     override fun onCleared() {

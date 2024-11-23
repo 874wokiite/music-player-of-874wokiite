@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -58,7 +60,7 @@ class TopActivity : ComponentActivity() {
 @Composable
 fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-
+    // 画面遷移を管理
     NavHost(
         navController = navController,
         startDestination = "com/example/music_palyer_of_874wokiite/features/musicList",
@@ -82,6 +84,7 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
 
             // `musicList`から、タイトルとアルバムに一致するアイテムを探す
             val musicData = musicList.find { it.musicTitle == musicTitle && it.albumTitle == albumTitle }
+            val isPlaying by musicViewModel.isPlaying.observeAsState(false)
 
             // 見つかった場合、`MusicDetailScreen`を表示
             musicData?.let {
@@ -92,14 +95,25 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     audioFile = it.audioFile,
                     modifier = Modifier.fillMaxSize(),
                     musicViewModel = musicViewModel,
+                    isPlaying = isPlaying,
+                    onPlay = {
+                        if (!isPlaying) {
+                            musicViewModel.resume()
+                        }
+                    },
+                    onPause = {
+                        if (isPlaying) {
+                            musicViewModel.pause()
+                        }
+                    },
                     onClose = {
                         navController.popBackStack()  // TopActivityに戻る
                     },
                     onNext = {
-                        musicViewModel.nextTrack()  // 次の曲に進む
+                        musicViewModel.nextTrack(navController) // NavControllerを渡す
                     },
                     onPrevious = {
-                        musicViewModel.previousTrack()  // 前の曲に戻る
+                        musicViewModel.previousTrack(navController)
                     },
                 )
             }
