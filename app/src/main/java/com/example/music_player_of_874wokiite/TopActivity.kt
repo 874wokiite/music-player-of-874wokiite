@@ -94,27 +94,34 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     albumTitle = it.albumTitle,
                     audioFile = it.audioFile,
                     modifier = Modifier.fillMaxSize(),
+                    // 再生停止関連
                     musicViewModel = musicViewModel,
                     isPlaying = isPlaying,
                     onPlay = {
                         if (!isPlaying) {
-                            musicViewModel.resume()
+                            musicViewModel.onPlay()
                         }
                     },
                     onPause = {
                         if (isPlaying) {
-                            musicViewModel.pause()
+                            musicViewModel.onPause()
                         }
                     },
                     onClose = {
-                        navController.popBackStack()  // TopActivityに戻る
+                        musicViewModel.onClose(navController)  // TopActivityに戻る
                     },
                     onNext = {
-                        musicViewModel.nextTrack(navController) // NavControllerを渡す
+                        musicViewModel.onNext(navController) // NavControllerを渡す
                     },
                     onPrevious = {
-                        musicViewModel.previousTrack(navController)
+                        musicViewModel.onPrevious(navController)
                     },
+                    // Seekbarの変数
+                    currentPosition = musicViewModel.currentPosition.observeAsState(0).value,
+                    duration = musicViewModel.duration.observeAsState(0).value,
+                    onValueChange = {
+                        musicViewModel.onValueChange(it.toInt())
+                    }
                 )
             }
         }

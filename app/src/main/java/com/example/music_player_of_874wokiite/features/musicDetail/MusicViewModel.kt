@@ -39,6 +39,10 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun onRefreshPlay() {
+
+    }
+
     fun prepareAndPlay(context: Context, audioFile: String) {
         viewModelScope.launch {
             val assetFileDescriptor = context.assets.openFd(audioFile)
@@ -51,21 +55,21 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun pause() {
+    fun onPause() {
         mediaPlayer?.pause()
         _isPlaying.value = false  // 再生状態を更新
     }
 
-    fun resume() {
+    fun onPlay() {
         mediaPlayer?.start()
         _isPlaying.value = true  // 再生状態を更新
     }
 
-    fun seekTo(position: Int) {
+    fun onValueChange(position: Int) {
         mediaPlayer?.seekTo(position)
     }
 
-    fun nextTrack(navController: NavController) {
+    fun onNext(navController: NavController) {
         currentTrackIndex = (currentTrackIndex + 1) % trackList.size
         val nextMusic = musicList[currentTrackIndex]
 
@@ -81,7 +85,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun previousTrack(navController: NavController) {
+    fun onPrevious(navController: NavController) {
         currentTrackIndex = if (currentTrackIndex - 1 < 0) trackList.size - 1 else currentTrackIndex - 1
         val previousMusic = musicList[currentTrackIndex]
         // 次の曲を再生準備
@@ -91,6 +95,14 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         navController.navigate("detail/${previousMusic.musicTitle}/${previousMusic.albumTitle}") {
             // 現在の画面スタックをクリアして戻らないようにする
             popUpTo("detail/${previousMusic.musicTitle}/${previousMusic.albumTitle}") {
+                inclusive = true
+            }
+        }
+    }
+
+    fun onClose(navController: NavController) {
+        navController.navigate("com/example/music_palyer_of_874wokiite/features/musicList") {
+            popUpTo("com/example/music_palyer_of_874wokiite/features/musicList") {
                 inclusive = true
             }
         }
