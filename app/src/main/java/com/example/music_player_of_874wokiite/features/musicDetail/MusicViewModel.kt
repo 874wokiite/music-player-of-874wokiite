@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.music_player_of_874wokiite.features.musiclist.MusicData
 import com.example.music_player_of_874wokiite.features.musiclist.musicList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,6 +29,9 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val trackList = musicList.map { it.audioFile } // 仮のトラックリスト
     private var currentTrackIndex = 0
 
+    private var currentMusicTitle: String? = null
+    private var currentAlbumTitle: String? = null
+
     init {
         mediaPlayer?.setOnPreparedListener {
             _duration.value = it.duration
@@ -39,19 +43,15 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun onRefreshPlay() {
-
-    }
-
     fun prepareAndPlay(context: Context, audioFile: String) {
         viewModelScope.launch {
-            val assetFileDescriptor = context.assets.openFd(audioFile)
-            mediaPlayer?.apply {
-                reset()
-                setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset, assetFileDescriptor.length)
-                prepareAsync()
+            context.assets.openFd(audioFile).use { assetFileDescriptor ->
+                mediaPlayer?.apply {
+                    reset()
+                    setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset, assetFileDescriptor.length)
+                    prepareAsync()
+                }
             }
-            assetFileDescriptor.close()
         }
     }
 
@@ -65,20 +65,39 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         _isPlaying.value = true  // 再生状態を更新
     }
 
+    fun onRefreshPlay(navController: NavController, musicData: MusicData) {
+        // 現在再生中の曲と選択された曲が同じ場合
+        if (currentMusicTitle == musicData.musicTitle && currentAlbumTitle == musicData.albumTitle) {
+            // 画面遷移のみ
+            navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
+        } else {
+            // 再生中の曲を変更してリフレッシュ再生
+            currentMusicTitle = musicData.musicTitle
+            currentAlbumTitle = musicData.albumTitle
+            prepareAndPlay(getApplication(), musicData.audioFile)
+
+            // 詳細画面へ遷移
+            navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
+        }
+    }
+
     fun onValueChange(position: Int) {
         mediaPlayer?.seekTo(position)
     }
 
     fun onNext(navController: NavController) {
-        currentTrackIndex = (currentTrackIndex + 1) % trackList.size
+        currentTrackIndex = (currentTrackIndex + 1) % musicList.size
         val nextMusic = musicList[currentTrackIndex]
+
+        // 再生中の曲情報を更新
+        currentMusicTitle = nextMusic.musicTitle
+        currentAlbumTitle = nextMusic.albumTitle
 
         // 次の曲を再生準備
         prepareAndPlay(getApplication(), nextMusic.audioFile)
 
-        // NavControllerを使って次の曲の画面に遷移
+        // 次の曲の詳細画面へ遷移
         navController.navigate("detail/${nextMusic.musicTitle}/${nextMusic.albumTitle}") {
-            // 現在の画面スタックをクリアして戻らないようにする
             popUpTo("detail/${nextMusic.musicTitle}/${nextMusic.albumTitle}") {
                 inclusive = true
             }
@@ -88,6 +107,11 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     fun onPrevious(navController: NavController) {
         currentTrackIndex = if (currentTrackIndex - 1 < 0) trackList.size - 1 else currentTrackIndex - 1
         val previousMusic = musicList[currentTrackIndex]
+
+        // 再生中の曲情報を更新
+        currentMusicTitle = previousMusic.musicTitle
+        currentAlbumTitle = previousMusic.albumTitle
+
         // 次の曲を再生準備
         prepareAndPlay(getApplication(), previousMusic.audioFile)
 
@@ -109,16 +133,16 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
-        super.onCleared()
         mediaPlayer?.release()
         mediaPlayer = null
+        super.onCleared()
     }
 
     init {
         viewModelScope.launch {
             while (true) {
                 mediaPlayer?.let {
-                    if (it.isPlaying) {
+                    if (_isPlaying.value == true) {
                         _currentPosition.postValue(it.currentPosition)
                     }
                 }
