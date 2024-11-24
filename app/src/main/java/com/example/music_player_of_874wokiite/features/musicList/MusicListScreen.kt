@@ -30,7 +30,7 @@ val musicList = listOf(
 
 // リスト表示画面
 @Composable
-fun MusicListScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun MusicListScreen(navController: NavController, modifier: Modifier = Modifier, onRefreshPlay: (MusicData) -> Unit,) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier
@@ -45,7 +45,7 @@ fun MusicListScreen(navController: NavController, modifier: Modifier = Modifier)
                     .padding(8.dp)
                     .clickable {
                         // クリックで詳細画面へ遷移
-                        navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
+                        onRefreshPlay(musicData)
                     }
             )
         }

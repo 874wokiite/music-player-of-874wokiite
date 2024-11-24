@@ -24,9 +24,7 @@ fun MusicDetailScreen(
     coverImage: String,
     musicTitle: String,
     albumTitle: String,
-    audioFile: String,
     modifier: Modifier = Modifier,
-    musicViewModel: MusicViewModel,
     isPlaying: Boolean,
     onPlay: () -> Unit,  // 再生開始コールバック
     onPause: () -> Unit,  // 再生停止コールバック
@@ -39,11 +37,6 @@ fun MusicDetailScreen(
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
-
-    // audioFileが変わったときのみ再生を準備・開始
-    LaunchedEffect(audioFile) {
-        musicViewModel.prepareAndPlay(context, audioFile)
-    }
 
     Column(modifier = modifier.padding(16.dp)) {
         Spacer(modifier = Modifier.height(16.dp))

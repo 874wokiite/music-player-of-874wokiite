@@ -68,7 +68,13 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
         exitTransition = { fadeOut() },
     ) {
         composable("com/example/music_palyer_of_874wokiite/features/musicList") {
-            MusicListScreen(navController)
+            MusicListScreen(
+                navController = navController,
+                modifier = Modifier.fillMaxSize(),
+                onRefreshPlay = { selectedMusicData ->
+                    musicViewModel.onRefreshPlay(navController, selectedMusicData)
+                }
+            )
         }
         composable(
             route = "detail/{musicTitle}/{albumTitle}",
@@ -92,10 +98,8 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     coverImage = it.coverImage,
                     musicTitle = it.musicTitle,
                     albumTitle = it.albumTitle,
-                    audioFile = it.audioFile,
                     modifier = Modifier.fillMaxSize(),
                     // 再生停止関連
-                    musicViewModel = musicViewModel,
                     isPlaying = isPlaying,
                     onPlay = {
                         if (!isPlaying) {
@@ -121,7 +125,7 @@ fun MusicApp(musicViewModel: MusicViewModel, modifier: Modifier = Modifier) {
                     duration = musicViewModel.duration.observeAsState(0).value,
                     onValueChange = {
                         musicViewModel.onValueChange(it.toInt())
-                    }
+                    },
                 )
             }
         }
