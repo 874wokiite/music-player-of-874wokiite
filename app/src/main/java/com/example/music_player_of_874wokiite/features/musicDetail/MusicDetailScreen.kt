@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -34,11 +33,12 @@ fun MusicDetailScreen(
     onClose: () -> Unit,  // 画面を閉じるコールバック
     onNext: () -> Unit,  // 次の曲に進めるコールバック
     onPrevious: () -> Unit,  // 前の曲に戻るコールバック
+    onValueChange: (Float) -> Unit,
+    currentPosition: Int,
+    duration: Int,
 ) {
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
-    val currentPosition by musicViewModel.currentPosition.observeAsState(0)
-    val duration by musicViewModel.duration.observeAsState(0)
 
     // audioFileが変わったときのみ再生を準備・開始
     LaunchedEffect(audioFile) {
@@ -66,9 +66,7 @@ fun MusicDetailScreen(
         SeekBar(
             currentPosition = currentPosition,
             duration = duration,
-            onValueChange = {
-                musicViewModel.seekTo(it.toInt())
-            }
+            onValueChange = onValueChange
         )
 
         // 再生と停止ボタン
