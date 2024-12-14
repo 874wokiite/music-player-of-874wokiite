@@ -93,9 +93,8 @@ class TopActivity : ComponentActivity() {
 fun MusicApp(
     musicViewModel: MusicViewModel,
     modifier: Modifier = Modifier,
-    navController: NavHostController // 外部から渡された NavController をそのまま使用
+    navController: NavHostController
 ) {
-    // NavHost のセットアップ
     NavHost(
         navController = navController,
         startDestination = "com/example/music_player_of_874wokiite/features/musicList",

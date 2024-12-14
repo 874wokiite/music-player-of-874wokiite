@@ -11,24 +11,22 @@ import androidx.compose.ui.graphics.Color
 // Light and Dark Color Schemes
 private val LightColors = lightColorScheme(
     primary = ColorPrimaryLight,
-    onPrimary = ObjectPrimaryLight,
-    secondary = ObjectSecondaryLight,
-    onSecondary = TextPrimaryLight,
-    background = ObjectTertiaryLight,
-    surface = ObjectTertiaryLight,
+    inverseSurface = ObjectPrimaryLight,
+    surface = ObjectSecondaryLight,
     onBackground = TextPrimaryLight,
-    onSurface = TextSecondaryLight
+    onSurface = TextSecondaryLight,
+    inverseOnSurface = TextTertiaryLight,
+    background = BackgroundLight,
 )
 
 private val DarkColors = darkColorScheme(
     primary = ColorPrimaryDark,
-    onPrimary = ObjectPrimaryDark,
-    secondary = ObjectSecondaryDark,
-    onSecondary = TextPrimaryDark,
-    background = ObjectTertiaryDark,
-    surface = ObjectTertiaryDark,
+    inverseSurface = ObjectPrimaryDark,
+    surface = ObjectSecondaryDark,
     onBackground = TextPrimaryDark,
-    onSurface = TextSecondaryDark
+    onSurface = TextSecondaryDark,
+    inverseOnSurface = TextTertiaryDark,
+    background = BackgroundDark,
 )
 
 @Composable
