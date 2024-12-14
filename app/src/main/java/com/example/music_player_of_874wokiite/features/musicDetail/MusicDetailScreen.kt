@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
@@ -38,8 +39,8 @@ fun MusicDetailScreen(
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
 
-    Column(modifier = modifier.padding(16.dp)) {
-        Spacer(modifier = Modifier.height(16.dp))
+    Column(modifier = modifier.padding(24.dp)) {
+        Spacer(modifier = Modifier.height(0.dp))
         DownIconButton(
             onClick = { onClose() }
         )
@@ -77,3 +78,24 @@ fun MusicDetailScreen(
 // Bitmap読み込み関数
 fun loadBitmapFromAssets(context: Context, fileName: String) =
     context.assets.open(fileName).use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+
+@Preview
+@Composable
+fun PreviewMusicDetailScreen(modifier: Modifier = Modifier) {
+    MusicDetailScreen(
+        coverImage = "xxxDay.png",
+        musicTitle = "xxxDay",
+        albumTitle = "xxxDay",
+        modifier = modifier,
+        isPlaying = true,
+        onPlay = {},
+        onPause = {},
+        onClose = {},
+        onNext = {},
+        onPrevious = {},
+        onValueChange = {},
+        currentPosition = 0,
+        duration = 0,
+    )
+
+}
