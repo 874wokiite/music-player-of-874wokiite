@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "275738489416",
+    "project_id": "music-player-of-874wokiite",
+    "storage_bucket": "music-player-of-874wokiite.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275738489416:android:b4964e6eb3741f38055e7d",
+        "android_client_info": {
+          "package_name": "com.example.music_player_of_874wokiite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiXFWVXSLQYVbdU70x8m6Y3Y8O9Ig3Xik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

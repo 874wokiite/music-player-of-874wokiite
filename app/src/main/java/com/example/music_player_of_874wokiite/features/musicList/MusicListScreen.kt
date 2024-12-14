@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.music_player_of_874wokiite.components.SampleListScreen
 
 
 // 音楽データを表すデータクラス
@@ -31,23 +32,24 @@ val musicList = listOf(
 // リスト表示画面
 @Composable
 fun MusicListScreen(navController: NavController, modifier: Modifier = Modifier, onRefreshPlay: (MusicData) -> Unit,) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier
-    ) {
-        items(musicList.size) { index ->
-            val musicData = musicList[index]
-            MusicContent(
-                coverImage = musicData.coverImage,
-                musicTitle = musicData.musicTitle,
-                albumTitle = musicData.albumTitle,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                        // クリックで詳細画面へ遷移
-                        onRefreshPlay(musicData)
-                    }
-            )
-        }
-    }
+//    LazyVerticalGrid(
+//        columns = GridCells.Fixed(2),
+//        modifier = modifier
+//    ) {
+//        items(musicList.size) { index ->
+//            val musicData = musicList[index]
+//            MusicContent(
+//                coverImage = musicData.coverImage,
+//                musicTitle = musicData.musicTitle,
+//                albumTitle = musicData.albumTitle,
+//                modifier = Modifier
+//                    .padding(8.dp)
+//                    .clickable {
+//                        // クリックで詳細画面へ遷移
+//                        onRefreshPlay(musicData)
+//                    }
+//            )
+//        }
+//    }
+    SampleListScreen()
 }

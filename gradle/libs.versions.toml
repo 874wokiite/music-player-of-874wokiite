@@ -11,6 +11,10 @@ composeBom = "2023.09.00"
 accompanist = "0.36.0"
 runtimeLivedata = "1.7.4"
 material3 = "1.3.0"
+firestore = "24.6.0"
+analytics = "21.3.0"
+coroutines = "1.7.3"
+googleServices = "4.3.15"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,9 +37,12 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firestore"}
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "analytics"}
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
