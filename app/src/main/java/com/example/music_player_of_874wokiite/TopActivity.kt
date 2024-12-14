@@ -95,55 +95,57 @@ fun MusicApp(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = "com/example/music_player_of_874wokiite/features/musicList",
-        enterTransition = { fadeIn() },
-        exitTransition = { fadeOut() },
-    ) {
-        composable("com/example/music_player_of_874wokiite/features/musicList") {
-            MusicListScreen(
-                navController = navController,
-                modifier = Modifier.fillMaxSize(),
-                onRefreshPlay = { selectedMusicData ->
-                    musicViewModel.onRefreshPlay(navController, selectedMusicData)
-                }
-            )
-        }
-        composable(
-            route = "detail/{musicTitle}/{albumTitle}",
-            arguments = listOf(
-                navArgument("musicTitle") { type = NavType.StringType },
-                navArgument("albumTitle") { type = NavType.StringType }
-            ),
+    MusicPlayerOf874wokiiteTheme {
+        NavHost(
+            navController = navController,
+            startDestination = "com/example/music_player_of_874wokiite/features/musicList",
             enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() }
-        ) { backStackEntry ->
-            val musicTitle = backStackEntry.arguments?.getString("musicTitle") ?: ""
-            val albumTitle = backStackEntry.arguments?.getString("albumTitle") ?: ""
-
-            // 楽曲データの検索
-            val musicData =
-                musicList.find { it.musicTitle == musicTitle && it.albumTitle == albumTitle }
-            val isPlaying by musicViewModel.isPlaying.observeAsState(false)
-
-            // データが見つかった場合のみ詳細画面を表示
-            musicData?.let {
-                MusicDetailScreen(
-                    coverImage = it.coverImage,
-                    musicTitle = it.musicTitle,
-                    albumTitle = it.albumTitle,
+            exitTransition = { fadeOut() },
+        ) {
+            composable("com/example/music_player_of_874wokiite/features/musicList") {
+                MusicListScreen(
+                    navController = navController,
                     modifier = Modifier.fillMaxSize(),
-                    isPlaying = isPlaying,
-                    onPlay = { if (!isPlaying) musicViewModel.onPlay() },
-                    onPause = { if (isPlaying) musicViewModel.onPause() },
-                    onClose = { musicViewModel.onClose(navController) },
-                    onNext = { musicViewModel.onNext(navController) },
-                    onPrevious = { musicViewModel.onPrevious(navController) },
-                    currentPosition = musicViewModel.currentPosition.observeAsState(0).value,
-                    duration = musicViewModel.duration.observeAsState(0).value,
-                    onValueChange = { musicViewModel.onValueChange(it.toInt()) }
+                    onRefreshPlay = { selectedMusicData ->
+                        musicViewModel.onRefreshPlay(navController, selectedMusicData)
+                    }
                 )
+            }
+            composable(
+                route = "detail/{musicTitle}/{albumTitle}",
+                arguments = listOf(
+                    navArgument("musicTitle") { type = NavType.StringType },
+                    navArgument("albumTitle") { type = NavType.StringType }
+                ),
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() }
+            ) { backStackEntry ->
+                val musicTitle = backStackEntry.arguments?.getString("musicTitle") ?: ""
+                val albumTitle = backStackEntry.arguments?.getString("albumTitle") ?: ""
+
+                // 楽曲データの検索
+                val musicData =
+                    musicList.find { it.musicTitle == musicTitle && it.albumTitle == albumTitle }
+                val isPlaying by musicViewModel.isPlaying.observeAsState(false)
+
+                // データが見つかった場合のみ詳細画面を表示
+                musicData?.let {
+                    MusicDetailScreen(
+                        coverImage = it.coverImage,
+                        musicTitle = it.musicTitle,
+                        albumTitle = it.albumTitle,
+                        modifier = Modifier.fillMaxSize(),
+                        isPlaying = isPlaying,
+                        onPlay = { if (!isPlaying) musicViewModel.onPlay() },
+                        onPause = { if (isPlaying) musicViewModel.onPause() },
+                        onClose = { musicViewModel.onClose(navController) },
+                        onNext = { musicViewModel.onNext(navController) },
+                        onPrevious = { musicViewModel.onPrevious(navController) },
+                        currentPosition = musicViewModel.currentPosition.observeAsState(0).value,
+                        duration = musicViewModel.duration.observeAsState(0).value,
+                        onValueChange = { musicViewModel.onValueChange(it.toInt()) }
+                    )
+                }
             }
         }
     }
