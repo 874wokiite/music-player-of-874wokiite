@@ -16,13 +16,22 @@
 
         <activity
             android:name=".TopActivity"
-            android:exported="true"
-            >
+            android:exported="true">
+            <!-- アプリ起動用のインテントフィルタ -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- NFC タグ (NDEF DISCOVERED) を受け取るためのインテントフィルタ -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- テキスト形式の MIME タイプを指定 -->
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
     </application>
 
 </manifest>
+
