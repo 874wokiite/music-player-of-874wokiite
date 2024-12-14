@@ -40,26 +40,42 @@ android {
 }
 
 dependencies {
-
+    // Android 標準ライブラリ
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
+
+    // Compose Platform（BOMによるバージョン管理）
     implementation(platform(libs.androidx.compose.bom))
+
+    // Jetpack Compose 基本ライブラリ
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.runtime.livedata)
+
+    // Material 3 Design ライブラリ
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.accompanist.navigation.animation)
+
+    // アイコン関連
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material.icons.core)
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.androidx.material3.android)
+
+    // Google Fonts サポート
+    implementation(libs.androidx.ui.font)
+
+    // アニメーション付きナビゲーション
+    implementation(libs.accompanist.navigation.animation)
+
+    // テスト関連
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // デバッグ用
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -19,6 +19,8 @@ import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
 import com.example.music_player_of_874wokiite.components.SeekBar
 import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
+import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
+import com.example.music_player_of_874wokiite.ui.theme.fontFamily
 
 @Composable
 fun MusicDetailScreen(
@@ -82,20 +84,21 @@ fun loadBitmapFromAssets(context: Context, fileName: String) =
 @Preview
 @Composable
 fun PreviewMusicDetailScreen(modifier: Modifier = Modifier) {
-    MusicDetailScreen(
-        coverImage = "xxxDay.png",
-        musicTitle = "xxxDay",
-        albumTitle = "xxxDay",
-        modifier = modifier,
-        isPlaying = true,
-        onPlay = {},
-        onPause = {},
-        onClose = {},
-        onNext = {},
-        onPrevious = {},
-        onValueChange = {},
-        currentPosition = 0,
-        duration = 0,
-    )
-
+    MusicPlayerOf874wokiiteTheme {
+        MusicDetailScreen(
+            coverImage = "xxxDay.png",
+            musicTitle = "xxxDay",
+            albumTitle = "xxxDay",
+            modifier = modifier,
+            isPlaying = true,
+            onPlay = {},
+            onPause = {},
+            onClose = {},
+            onNext = {},
+            onPrevious = {},
+            onValueChange = {},
+            currentPosition = 0,
+            duration = 0,
+        )
+    }
 }
