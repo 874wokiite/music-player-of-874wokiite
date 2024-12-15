@@ -3,6 +3,7 @@ package com.example.music_player_of_874wokiite.features.musiclist
 import MusicContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -49,7 +50,8 @@ fun MusicListScreen(
             columns = GridCells.Fixed(2),
             modifier = modifier
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
+            contentPadding = PaddingValues(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
         ) {
             items(musicList.size) { index ->
                 val musicData = musicList[index]
@@ -58,7 +60,6 @@ fun MusicListScreen(
                     musicTitle = musicData.musicTitle,
                     albumTitle = musicData.albumTitle,
                     modifier = Modifier
-                        .padding(8.dp)
                         .clickable {
                             // クリックで詳細画面へ遷移
                             onRefreshPlay(musicData)
