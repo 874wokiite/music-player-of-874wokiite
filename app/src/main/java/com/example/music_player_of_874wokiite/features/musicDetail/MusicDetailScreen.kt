@@ -41,7 +41,11 @@ fun MusicDetailScreen(
     val context = LocalContext.current
     val bitmap = remember { loadBitmapFromAssets(context, coverImage) }
 
-    Column(modifier = modifier.padding(24.dp)) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp)
+    ) {
         Spacer(modifier = Modifier.height(0.dp))
         DownIconButton(
             onClick = { onClose() }
