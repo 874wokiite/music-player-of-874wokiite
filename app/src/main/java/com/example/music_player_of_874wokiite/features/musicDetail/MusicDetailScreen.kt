@@ -19,9 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
 import com.example.music_player_of_874wokiite.components.SeekBar
-import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
-import com.example.music_player_of_874wokiite.ui.theme.fontFamily
 
 @Composable
 fun MusicDetailScreen(
@@ -30,11 +28,11 @@ fun MusicDetailScreen(
     albumTitle: String,
     modifier: Modifier = Modifier,
     isPlaying: Boolean,
-    onPlay: () -> Unit,  // 再生開始コールバック
-    onPause: () -> Unit,  // 再生停止コールバック
-    onClose: () -> Unit,  // 画面を閉じるコールバック
-    onNext: () -> Unit,  // 次の曲に進めるコールバック
-    onPrevious: () -> Unit,  // 前の曲に戻るコールバック
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
+    onClose: () -> Unit,
+    onNext: () -> Unit,
+    onPrevious: () -> Unit,
     onValueChange: (Float) -> Unit,
     currentPosition: Int,
     duration: Int,
