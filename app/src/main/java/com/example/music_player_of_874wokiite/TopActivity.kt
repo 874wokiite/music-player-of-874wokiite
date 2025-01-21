@@ -38,7 +38,7 @@ import com.example.music_player_of_874wokiite.utils.NfcHandler
 class TopActivity : ComponentActivity() {
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var nfcAdapter: NfcAdapter
-    private var navController: NavController? = null // ComposeのNavControllerを保持
+    private var navController: NavController? = null
     private lateinit var nfcHandler: NfcHandler
     private val mediaPlayerHandler = MediaPlayerHandler()
 
@@ -54,10 +54,10 @@ class TopActivity : ComponentActivity() {
 
         setContent {
             val localNavController = rememberNavController()
-            navController = localNavController // ComposeのNavControllerを保持
+            navController = localNavController
 
             // NfcHandlerのインスタンスを作成
-            nfcHandler = NfcHandler(navController)
+            nfcHandler = NfcHandler(localNavController, this) // `this`でcontextを渡す
 
             MusicPlayerOf874wokiiteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
