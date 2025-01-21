@@ -1,5 +1,6 @@
 package com.example.music_player_of_874wokiite.utils
 
+import android.content.Context
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.NdefMessage
@@ -9,7 +10,8 @@ import android.util.Log
 import androidx.navigation.NavController
 
 class NfcHandler(
-    private val navController: NavController?
+    private val navController: NavController?,
+    private val context: Context
 ) {
     fun handleNfcIntent(intent: Intent) {
         if (navController == null) {
@@ -21,6 +23,13 @@ class NfcHandler(
         }
 
         Log.d("NFC_DEBUG", "Intent received with action: ${intent.action}")
+
+        // NFCがサポートされていない場合の早期リターン
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
+        if (nfcAdapter == null) {
+            Log.e("NFC_DEBUG", "NFC is not supported on this device")
+            return
+        }
 
         if (NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action) {
             val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
