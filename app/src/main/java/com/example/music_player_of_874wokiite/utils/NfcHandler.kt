@@ -1,31 +1,29 @@
 package com.example.music_player_of_874wokiite.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.nfc.NfcAdapter
 import android.nfc.NdefMessage
+import android.nfc.NfcAdapter
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.navigation.NavController
 
-class NfcHandler(
-    private val navController: NavController?,
-    private val context: Context
-) {
+class NfcHandler(private val navController: NavController?, private val context: Context) {
+    private val nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(context)
+
     fun handleNfcIntent(intent: Intent) {
         if (navController == null) {
             Log.e("NFC_DEBUG", "NavController is not initialized yet, retrying...")
-            Handler(Looper.getMainLooper()).postDelayed({
-                handleNfcIntent(intent)
-            }, 100) // 100ms 後に再試行
+            Handler(Looper.getMainLooper())
+                .postDelayed({ handleNfcIntent(intent) }, 100) // 100ms 後に再試行
             return
         }
 
         Log.d("NFC_DEBUG", "Intent received with action: ${intent.action}")
 
         // NFCがサポートされていない場合の早期リターン
-        val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
         if (nfcAdapter == null) {
             Log.e("NFC_DEBUG", "NFC is not supported on this device")
             return
@@ -65,5 +63,13 @@ class NfcHandler(
         } else {
             Log.e("NFC_DEBUG", "Unexpected intent action: ${intent.action}")
         }
+    }
+
+    fun enableForegroundDispatch(activity: Activity) {
+        // フォアグラウンドディスパッチの設定...
+    }
+
+    fun disableForegroundDispatch(activity: Activity) {
+        // フォアグラウンドディスパッチの無効化...
     }
 }
