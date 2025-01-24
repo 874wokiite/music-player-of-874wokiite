@@ -30,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.music_player_of_874wokiite.features.musicDetail.MusicViewModel
 import com.example.music_player_of_874wokiite.features.musiclist.MusicListScreen
-import com.example.music_player_of_874wokiite.features.musiclist.musicList
+import com.example.music_player_of_874wokiite.model.musicList
 import com.example.music_player_of_874wokiite.ui.MusicDetailScreen
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 import com.example.music_player_of_874wokiite.utils.MediaPlayerHandler
