@@ -1,11 +1,13 @@
 package com.example.music_player_of_874wokiite
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaPlayer
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -34,20 +36,19 @@ import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTh
 import com.example.music_player_of_874wokiite.utils.MediaPlayerHandler
 import com.example.music_player_of_874wokiite.utils.NfcHandler
 
-
 class TopActivity : ComponentActivity() {
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var nfcAdapter: NfcAdapter
     private var navController: NavController? = null
     private lateinit var nfcHandler: NfcHandler
     private val mediaPlayerHandler = MediaPlayerHandler()
+    private var nfcAdapter: NfcAdapter? = null // Nullableに変更
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val musicViewModel: MusicViewModel by viewModels()
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-            ?: throw IllegalStateException("NFCがサポートされていません")
 
         // MediaPlayerの初期化
         mediaPlayer = mediaPlayerHandler.initializeMediaPlayer(this)
@@ -62,23 +63,28 @@ class TopActivity : ComponentActivity() {
             MusicPlayerOf874wokiiteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MusicApp(
-                        musicViewModel = musicViewModel,
-                        modifier = Modifier.padding(innerPadding),
-                        navController = localNavController
+                            musicViewModel = musicViewModel,
+                            modifier = Modifier.padding(innerPadding),
+                            navController = localNavController
                     )
                 }
             }
         }
 
-        // `setContent` が完了した後に NFC インテントを処理
-        Handler(Looper.getMainLooper()).post {
-            nfcHandler.handleNfcIntent(intent)
+        // NFCがサポートされていない場合のログ出力
+        if (nfcAdapter == null) {
+            Log.e("NFC_DEBUG", "NFC is not supported on this device")
+        } else {
+            // `setContent` が完了した後に NFC インテントを処理
+            Handler(Looper.getMainLooper()).post { nfcHandler.handleNfcIntent(intent) }
         }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        nfcHandler.handleNfcIntent(intent)
+        if (nfcAdapter != null) {
+            nfcHandler.handleNfcIntent(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -87,63 +93,66 @@ class TopActivity : ComponentActivity() {
     }
 }
 
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MusicApp(
-    musicViewModel: MusicViewModel,
-    modifier: Modifier = Modifier,
-    navController: NavHostController
+        musicViewModel: MusicViewModel,
+        modifier: Modifier = Modifier,
+        navController: NavHostController
 ) {
     MusicPlayerOf874wokiiteTheme {
         NavHost(
-            navController = navController,
-            startDestination = "com/example/music_player_of_874wokiite/features/musicList",
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() },
+                navController = navController,
+                startDestination = "com/example/music_player_of_874wokiite/features/musicList",
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() },
         ) {
             composable("com/example/music_player_of_874wokiite/features/musicList") {
                 MusicListScreen(
-                    navController = navController,
-                    modifier = Modifier.fillMaxSize(),
-                    onRefreshPlay = { selectedMusicData ->
-                        musicViewModel.onRefreshPlay(navController, selectedMusicData)
-                    }
+                        navController = navController,
+                        modifier = Modifier.fillMaxSize(),
+                        onRefreshPlay = { selectedMusicData ->
+                            musicViewModel.onRefreshPlay(navController, selectedMusicData)
+                        }
                 )
             }
             composable(
-                route = "detail/{musicTitle}/{albumTitle}",
-                arguments = listOf(
-                    navArgument("musicTitle") { type = NavType.StringType },
-                    navArgument("albumTitle") { type = NavType.StringType }
-                ),
-                enterTransition = { fadeIn() },
-                exitTransition = { fadeOut() }
+                    route = "detail/{musicTitle}/{albumTitle}",
+                    arguments =
+                            listOf(
+                                    navArgument("musicTitle") { type = NavType.StringType },
+                                    navArgument("albumTitle") { type = NavType.StringType }
+                            ),
+                    enterTransition = { fadeIn() },
+                    exitTransition = { fadeOut() }
             ) { backStackEntry ->
                 val musicTitle = backStackEntry.arguments?.getString("musicTitle") ?: ""
                 val albumTitle = backStackEntry.arguments?.getString("albumTitle") ?: ""
 
                 // 楽曲データの検索
                 val musicData =
-                    musicList.find { it.musicTitle == musicTitle && it.albumTitle == albumTitle }
+                        musicList.find {
+                            it.musicTitle == musicTitle && it.albumTitle == albumTitle
+                        }
                 val isPlaying by musicViewModel.isPlaying.observeAsState(false)
 
                 // データが見つかった場合のみ詳細画面を表示
                 musicData?.let {
                     MusicDetailScreen(
-                        coverImage = it.coverImage,
-                        musicTitle = it.musicTitle,
-                        albumTitle = it.albumTitle,
-                        modifier = Modifier.fillMaxSize(),
-                        isPlaying = isPlaying,
-                        onPlay = { if (!isPlaying) musicViewModel.onPlay() },
-                        onPause = { if (isPlaying) musicViewModel.onPause() },
-                        onClose = { musicViewModel.onClose(navController) },
-                        onNext = { musicViewModel.onNext(navController) },
-                        onPrevious = { musicViewModel.onPrevious(navController) },
-                        currentPosition = musicViewModel.currentPosition.observeAsState(0).value,
-                        duration = musicViewModel.duration.observeAsState(0).value,
-                        onValueChange = { musicViewModel.onValueChange(it.toInt()) }
+                            coverImage = it.coverImage,
+                            musicTitle = it.musicTitle,
+                            albumTitle = it.albumTitle,
+                            modifier = Modifier.fillMaxSize(),
+                            isPlaying = isPlaying,
+                            onPlay = { if (!isPlaying) musicViewModel.onPlay() },
+                            onPause = { if (isPlaying) musicViewModel.onPause() },
+                            onClose = { musicViewModel.onClose(navController) },
+                            onNext = { musicViewModel.onNext(navController) },
+                            onPrevious = { musicViewModel.onPrevious(navController) },
+                            currentPosition =
+                                    musicViewModel.currentPosition.observeAsState(0).value,
+                            duration = musicViewModel.duration.observeAsState(0).value,
+                            onValueChange = { musicViewModel.onValueChange(it.toInt()) }
                     )
                 }
             }
