@@ -10,8 +10,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.music_player_of_874wokiite.features.musiclist.MusicData
-import com.example.music_player_of_874wokiite.features.musiclist.musicList
+import com.example.music_player_of_874wokiite.model.MusicData
+import com.example.music_player_of_874wokiite.model.musicList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -15,25 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.music_player_of_874wokiite.components.MyScaffold
+import com.example.music_player_of_874wokiite.model.MusicData
+import com.example.music_player_of_874wokiite.model.musicList
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
-
-
-// 音楽データを表すデータクラス
-data class MusicData(
-    val coverImage: String,
-    val musicTitle: String,
-    val albumTitle: String,
-    val audioFile: String,
-)
-
-// リストデータ
-val musicList = listOf(
-    MusicData("happyReborn.png", "Haribo", "Haribo Album", "happyReborn.mp3"),
-    MusicData("xxxDay.png", "xxxDay", "xxxDay", "happyReborn.mp3"),
-    MusicData("rememberApathy.png", "思い出したアパシー", "思い出したアパシー", "rememberApathy.mp3"),
-    MusicData("goGoGo.png", "はしろ", "xxxDay", "rememberApathy.mp3"),
-    MusicData("doku.png", "毒", "xxxDay", "happyReborn.mp3")
-)
 
 // リスト表示画面
 @Composable
