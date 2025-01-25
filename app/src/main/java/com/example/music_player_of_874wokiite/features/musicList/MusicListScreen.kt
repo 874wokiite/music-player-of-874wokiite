@@ -23,7 +23,6 @@ import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTh
 @Composable
 fun MusicListScreen(
     navController: NavController,
-    modifier: Modifier = Modifier,
     onRefreshPlay: (MusicData) -> Unit,
 ) {
     MyScaffold(
@@ -32,7 +31,7 @@ fun MusicListScreen(
     ) { innerPadding -> // Scaffoldの余白がここで渡される
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background),
             contentPadding = PaddingValues(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
@@ -61,7 +60,6 @@ fun PreviewMusicListScreen(modifier: Modifier = Modifier) {
     MusicPlayerOf874wokiiteTheme {
         MusicListScreen(
             navController = NavController(LocalContext.current),
-            modifier = modifier,
             onRefreshPlay = {}
         )
     }
