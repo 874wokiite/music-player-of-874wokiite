@@ -11,11 +11,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -59,10 +57,9 @@ class TopActivity : ComponentActivity() {
             nfcHandler = NfcHandler(localNavController, this) // `this`でcontextを渡す
 
             MusicPlayerOf874wokiiteTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) {
                     MusicApp(
                         musicViewModel = musicViewModel,
-                        modifier = Modifier.padding(innerPadding),
                         navController = localNavController
                     )
                 }
@@ -91,11 +88,9 @@ class TopActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MusicApp(
     musicViewModel: MusicViewModel,
-    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
     MusicPlayerOf874wokiiteTheme {
