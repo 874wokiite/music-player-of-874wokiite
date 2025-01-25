@@ -2,7 +2,6 @@ package com.example.music_player_of_874wokiite.features.musicDetail
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
 import com.example.music_player_of_874wokiite.components.SeekBar
+import com.example.music_player_of_874wokiite.features.musicDetail.components.MusicDetailImageSection
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 
 @Composable
@@ -50,13 +50,7 @@ fun MusicDetailContent(
         DownIconButton(
             onClick = { onClose() }
         )
-        bitmap?.let {
-            Image(
-                bitmap = it,
-                contentDescription = null,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
+        MusicDetailImageSection(bitmap = bitmap)
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = musicTitle, style = MaterialTheme.typography.titleMedium)
         Text(text = albumTitle, style = MaterialTheme.typography.titleSmall)
