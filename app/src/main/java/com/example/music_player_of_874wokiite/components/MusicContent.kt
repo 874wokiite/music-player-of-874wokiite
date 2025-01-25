@@ -11,13 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.music_player_of_874wokiite.R
-import com.example.music_player_of_874wokiite.features.musiclist.MusicListScreen
-import com.example.music_player_of_874wokiite.ui.loadBitmapFromAssets
+import com.example.music_player_of_874wokiite.features.musicDetail.loadBitmapFromAssets
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 
 

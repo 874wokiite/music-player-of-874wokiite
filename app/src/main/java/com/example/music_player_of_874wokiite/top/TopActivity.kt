@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -110,7 +108,6 @@ fun MusicApp(
             composable("com/example/music_player_of_874wokiite/features/musicList") {
                 MusicListScreen(
                     navController = navController,
-                    modifier = Modifier.fillMaxSize(),
                     onRefreshPlay = { selectedMusicData ->
                         musicViewModel.onRefreshPlay(navController, selectedMusicData)
                     }
@@ -134,25 +131,13 @@ fun MusicApp(
                     musicList.find {
                         it.musicTitle == musicTitle && it.albumTitle == albumTitle
                     }
-                val isPlaying by musicViewModel.isPlaying.observeAsState(false)
 
                 // データが見つかった場合のみ詳細画面を表示
                 musicData?.let {
                     MusicDetailScreen(
-                        coverImage = it.coverImage,
-                        musicTitle = it.musicTitle,
-                        albumTitle = it.albumTitle,
-                        modifier = Modifier.fillMaxSize(),
-                        isPlaying = isPlaying,
-                        onPlay = { if (!isPlaying) musicViewModel.onPlay() },
-                        onPause = { if (isPlaying) musicViewModel.onPause() },
-                        onClose = { musicViewModel.onClose(navController) },
-                        onNext = { musicViewModel.onNext(navController) },
-                        onPrevious = { musicViewModel.onPrevious(navController) },
-                        currentPosition =
-                        musicViewModel.currentPosition.observeAsState(0).value,
-                        duration = musicViewModel.duration.observeAsState(0).value,
-                        onValueChange = { musicViewModel.onValueChange(it.toInt()) }
+                        musicData = it,
+                        musicViewModel = musicViewModel,
+                        navController = navController
                     )
                 }
             }
