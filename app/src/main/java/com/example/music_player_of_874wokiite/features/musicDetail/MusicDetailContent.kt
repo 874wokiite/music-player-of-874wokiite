@@ -20,6 +20,7 @@ import com.example.music_player_of_874wokiite.components.CustomButton
 import com.example.music_player_of_874wokiite.components.DownIconButton
 import com.example.music_player_of_874wokiite.components.SeekBar
 import com.example.music_player_of_874wokiite.features.musicDetail.components.MusicDetailImageSection
+import com.example.music_player_of_874wokiite.features.musicDetail.components.MusicDetailTitleSection
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 
 @Composable
@@ -47,31 +48,23 @@ fun MusicDetailContent(
             .padding(16.dp)
     ) {
         Spacer(modifier = Modifier.height(0.dp))
-        DownIconButton(
-            onClick = { onClose() }
-        )
+        DownIconButton(onClick = { onClose() })
         MusicDetailImageSection(bitmap = bitmap)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(text = musicTitle, style = MaterialTheme.typography.titleMedium)
-        Text(text = albumTitle, style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Now Playing: $musicTitle", style = MaterialTheme.typography.bodyMedium)
+        MusicDetailTitleSection(musicTitle = musicTitle, albumTitle = albumTitle)
+        Spacer(modifier = Modifier.height(16.dp))
 
         SeekBar(
-            currentPosition = currentPosition,
-            duration = duration,
-            onValueChange = onValueChange
+            currentPosition = currentPosition, duration = duration, onValueChange = onValueChange
         )
 
         // 再生と停止ボタン
-        CustomButton(
-            modifier = modifier,
+        CustomButton(modifier = modifier,
             isPlaying = isPlaying,
             onPlay = { onPlay() },
             onPause = { onPause() },
             onNext = { onNext() },
-            onPrevious = { onPrevious() }
-        )
+            onPrevious = { onPrevious() })
     }
 }
 

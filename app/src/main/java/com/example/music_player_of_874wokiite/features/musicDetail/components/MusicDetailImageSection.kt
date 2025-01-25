@@ -14,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.music_player_of_874wokiite.R
 import com.example.music_player_of_874wokiite.modifiers.innerShadow
 import com.example.music_player_of_874wokiite.ui.theme.MusicPlayerOf874wokiiteTheme
 
@@ -30,15 +28,15 @@ fun MusicDetailImageSection(
             .fillMaxWidth()
             .aspectRatio(1f)
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(8.dp)
+            .background(MaterialTheme.colorScheme.inverseSurface)
+            .padding(12.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.inverseSurface)
-                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(12.dp)
         ) {
             bitmap?.let { imageBitmap ->
                 Image(
@@ -52,7 +50,7 @@ fun MusicDetailImageSection(
                     .fillMaxSize()
                     .innerShadow(
                         shape = RectangleShape,
-                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.25f),
+                        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.6f),
                         blur = 4.dp,
                         offsetY = 2.dp,
                         offsetX = 2.dp,
