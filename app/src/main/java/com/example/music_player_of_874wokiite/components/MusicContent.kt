@@ -42,7 +42,7 @@ fun MusicContent(coverImage:String, musicTitle: String, albumTitle:String, modif
             text = musicTitle,
             color = MaterialTheme.colorScheme.inverseSurface,
             modifier = modifier.padding(bottom = 4.dp),
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyLarge
         )
         Text(
             text = albumTitle,

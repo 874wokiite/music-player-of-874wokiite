@@ -29,11 +29,11 @@ fun MusicDetailTitleSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(104.dp)
+            .height(108.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.inverseSurface)
             .padding(12.dp)
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,11 +45,13 @@ fun MusicDetailTitleSection(
             Text(
                 text = musicTitle,
                 style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = albumTitle,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.inverseOnSurface,
             )
         }
         Box(
