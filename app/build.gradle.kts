@@ -67,6 +67,15 @@ dependencies {
 
     // アニメーション付きナビゲーション
     implementation(libs.accompanist.navigation.animation)
+    
+    // AWS SDK
+    implementation(libs.aws.android.sdk.core)
+    implementation(libs.aws.android.sdk.s3)
+    
+    // ExoPlayer
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    
 
     // テスト関連
     testImplementation(libs.junit)

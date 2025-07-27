@@ -3,20 +3,27 @@ package com.example.music_player_of_874wokiite.features.musicDetail
 // 再生に必要なロジックなど
 import android.app.Application
 import android.content.Context
-import android.media.MediaPlayer
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.music_player_of_874wokiite.model.MusicData
 import com.example.music_player_of_874wokiite.model.musicList
+import com.example.music_player_of_874wokiite.repository.S3Repository
+import com.example.music_player_of_874wokiite.utils.EnvironmentCredentialsManager
+import com.example.music_player_of_874wokiite.utils.AwsCredentialsHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MusicViewModel(application: Application) : AndroidViewModel(application) {
-    private var mediaPlayer: MediaPlayer? = MediaPlayer()
+    private var exoPlayer: ExoPlayer? = null
+    private val s3Repository = S3Repository(application)
+    private val credentialsManager = EnvironmentCredentialsManager(application)
 
     // MutableLiveDataで再生状態を管理
     private val _isPlaying = MutableLiveData(false)
@@ -39,46 +46,76 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private var currentAlbumTitle: String? = null
 
     init {
-        mediaPlayer?.setOnPreparedListener {
-            _duration.value = it.duration
-            it.start()
-            _isPlaying.value = true
-            Log.d("MusicViewModel", "Playback started for: $currentMusicTitle")
+        initializeExoPlayer()
+        initializeS3Repository()
+    }
+    
+    private fun initializeExoPlayer() {
+        exoPlayer = ExoPlayer.Builder(getApplication()).build().apply {
+            addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    when (playbackState) {
+                        Player.STATE_READY -> {
+                            _duration.value = duration.toInt()
+                            if (playWhenReady) {
+                                _isPlaying.value = true
+                                Log.d("MusicViewModel", "Playback started for: $currentMusicTitle")
+                            }
+                        }
+                        Player.STATE_ENDED -> {
+                            _isPlaying.value = false
+                        }
+                    }
+                }
+                
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    _isPlaying.value = isPlaying
+                }
+            })
         }
-        mediaPlayer?.setOnCompletionListener {
-            _isPlaying.value = false
+    }
+    
+    private fun initializeS3Repository() {
+        if (credentialsManager.hasCredentials()) {
+            val accessKeyId = credentialsManager.getAccessKeyId()!!
+            val secretAccessKey = credentialsManager.getSecretAccessKey()!!
+            val bucketName = credentialsManager.getBucketName()!!
+            s3Repository.initialize(accessKeyId, secretAccessKey, bucketName)
         }
     }
 
-    fun prepareAndPlay(context: Context, audioFile: String) {
-        Log.d("MusicViewModel", "Preparing to play: $audioFile")
+    private fun prepareAndPlay(context: Context, musicData: MusicData) {
+        Log.d("MusicViewModel", "Preparing to play: ${musicData.musicTitle}")
         viewModelScope.launch {
             try {
-                context.assets.openFd(audioFile).use { assetFileDescriptor ->
-                    mediaPlayer?.apply {
-                        reset()
-                        setDataSource(
-                            assetFileDescriptor.fileDescriptor,
-                            assetFileDescriptor.startOffset,
-                            assetFileDescriptor.length
-                        )
-                        prepareAsync()
-                    }
+                val mediaItem = if (musicData.isRemote) {
+                    // S3 URLから再生
+                    MediaItem.fromUri(musicData.getAudioUrl())
+                } else {
+                    // ローカルアセットから再生
+                    val assetUri = "asset:///${musicData.audioFile}"
+                    MediaItem.fromUri(assetUri)
+                }
+                
+                exoPlayer?.apply {
+                    setMediaItem(mediaItem)
+                    prepare()
+                    playWhenReady = true
                 }
             } catch (e: Exception) {
-                Log.e("MusicViewModel", "Error preparing audio file: $audioFile", e)
+                Log.e("MusicViewModel", "Error preparing audio file: ${musicData.audioFile}", e)
             }
         }
     }
 
     fun onPause() {
-        mediaPlayer?.pause()
-        _isPlaying.value = false  // 再生状態を更新
+        exoPlayer?.pause()
+        _isPlaying.value = false
     }
 
     fun onPlay() {
-        mediaPlayer?.start()
-        _isPlaying.value = true  // 再生状態を更新
+        exoPlayer?.play()
+        _isPlaying.value = true
     }
 
     fun onRefreshPlay(navController: NavController, musicData: MusicData) {
@@ -93,7 +130,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
             _currentMusicData.value = musicData
             // currentTrackIndexも更新
             currentTrackIndex = musicList.indexOf(musicData)
-            prepareAndPlay(getApplication(), musicData.audioFile)
+            prepareAndPlay(getApplication(), musicData)
 
             // 詳細画面へ遷移
             navController.navigate("detail/${musicData.musicTitle}/${musicData.albumTitle}")
@@ -101,7 +138,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onValueChange(position: Int) {
-        mediaPlayer?.seekTo(position)
+        exoPlayer?.seekTo(position.toLong())
     }
 
     fun onNext(navController: NavController) {
@@ -114,7 +151,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         _currentMusicData.value = nextMusic
 
         // 次の曲を再生準備
-        prepareAndPlay(getApplication(), nextMusic.audioFile)
+        prepareAndPlay(getApplication(), nextMusic)
 
         // 次の曲の詳細画面へ遷移
         navController.navigate("detail/${nextMusic.musicTitle}/${nextMusic.albumTitle}") {
@@ -135,7 +172,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         _currentMusicData.value = nextMusic
 
         // 次の曲を再生準備
-        prepareAndPlay(getApplication(), nextMusic.audioFile)
+        prepareAndPlay(getApplication(), nextMusic)
     }
 
     fun onPrevious(navController: NavController) {
@@ -149,7 +186,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         _currentMusicData.value = previousMusic
 
         // 次の曲を再生準備
-        prepareAndPlay(getApplication(), previousMusic.audioFile)
+        prepareAndPlay(getApplication(), previousMusic)
 
         // NavControllerを使って次の曲の画面に遷移
         navController.navigate("detail/${previousMusic.musicTitle}/${previousMusic.albumTitle}") {
@@ -172,7 +209,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         _currentMusicData.value = previousMusic
 
         // 前の曲を再生準備
-        prepareAndPlay(getApplication(), previousMusic.audioFile)
+        prepareAndPlay(getApplication(), previousMusic)
     }
 
     fun onClose(navController: NavController) {
@@ -184,21 +221,57 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     override fun onCleared() {
-        mediaPlayer?.release()
-        mediaPlayer = null
+        exoPlayer?.release()
+        exoPlayer = null
         super.onCleared()
     }
 
     init {
         viewModelScope.launch {
             while (true) {
-                mediaPlayer?.let {
+                exoPlayer?.let {
                     if (_isPlaying.value == true) {
-                        _currentPosition.postValue(it.currentPosition)
+                        _currentPosition.postValue(it.currentPosition.toInt())
                     }
                 }
                 delay(50)
             }
         }
+    }
+    
+    // AWS認証情報を設定
+    fun setAwsCredentials(accessKeyId: String, secretAccessKey: String, bucketName: String): Boolean {
+        val success = AwsCredentialsHelper.saveCredentials(getApplication(), accessKeyId, secretAccessKey, bucketName)
+        if (success) {
+            s3Repository.initialize(accessKeyId, secretAccessKey, bucketName)
+            Log.d("MusicViewModel", "AWS credentials configured successfully")
+        } else {
+            Log.e("MusicViewModel", "Failed to save AWS credentials")
+        }
+        return success
+    }
+    
+    // 認証情報の状態をチェック
+    fun checkCredentialsStatus(): Boolean {
+        val hasCredentials = AwsCredentialsHelper.hasCredentials(getApplication())
+        if (hasCredentials) {
+            AwsCredentialsHelper.logCredentialsStatus(getApplication())
+        }
+        return hasCredentials && s3Repository.isInitialized()
+    }
+    
+    // 認証情報をクリア
+    fun clearAwsCredentials(): Boolean {
+        return AwsCredentialsHelper.clearCredentials(getApplication())
+    }
+    
+    // S3から音楽ファイル一覧を取得
+    fun loadS3MusicFiles(): List<String> {
+        return s3Repository.listMusicFiles()
+    }
+    
+    // S3の音楽データを作成
+    fun createS3MusicData(s3Key: String, musicTitle: String, albumTitle: String, coverImageKey: String? = null): MusicData? {
+        return s3Repository.createS3MusicData(s3Key, musicTitle, albumTitle, coverImageKey)
     }
 }
