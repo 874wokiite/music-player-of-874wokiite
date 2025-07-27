@@ -105,7 +105,8 @@ fun MusicApp(
                     navController = navController,
                     onRefreshPlay = { selectedMusicData ->
                         musicViewModel.onRefreshPlay(navController, selectedMusicData)
-                    }
+                    },
+                    musicViewModel = musicViewModel
                 )
             }
             composable(
