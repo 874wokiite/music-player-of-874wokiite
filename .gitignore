@@ -7,9 +7,35 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deviceManager.xml
+/.idea/inspectionProfiles/
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+
+# CDK関連
+infrastructure/build/
+infrastructure/.gradle/
+infrastructure/cdk.out/
+infrastructure/node_modules/
+infrastructure/cdk.context.json
+infrastructure/.cdk.staging/
+infrastructure/cdk-*.yaml
+infrastructure/.cdk/
+*.cdk.staging
+cdk.out/
+
+# AWS関連
+.aws-sam/
+.aws/
+
+# Gradle Wrapper キャッシュ
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# 環境変数ファイル
+.env
+app/src/main/assets/.env
