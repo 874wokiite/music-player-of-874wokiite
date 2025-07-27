@@ -28,6 +28,10 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
     private val _duration = MutableLiveData(0)
     val duration: LiveData<Int> = _duration
 
+    // 現在再生中の楽曲情報
+    private val _currentMusicData = MutableLiveData<MusicData?>()
+    val currentMusicData: LiveData<MusicData?> = _currentMusicData
+
     private val trackList = musicList.map { it.audioFile } // 仮のトラックリスト
     private var currentTrackIndex = 0
 
@@ -86,6 +90,9 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
             // 再生中の曲を変更してリフレッシュ再生
             currentMusicTitle = musicData.musicTitle
             currentAlbumTitle = musicData.albumTitle
+            _currentMusicData.value = musicData
+            // currentTrackIndexも更新
+            currentTrackIndex = musicList.indexOf(musicData)
             prepareAndPlay(getApplication(), musicData.audioFile)
 
             // 詳細画面へ遷移
@@ -104,6 +111,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         // 再生中の曲情報を更新
         currentMusicTitle = nextMusic.musicTitle
         currentAlbumTitle = nextMusic.albumTitle
+        _currentMusicData.value = nextMusic
 
         // 次の曲を再生準備
         prepareAndPlay(getApplication(), nextMusic.audioFile)
@@ -116,6 +124,20 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    // ミニプレーヤー用：画面遷移しない次の楽曲
+    fun onNextMiniPlayer() {
+        currentTrackIndex = (currentTrackIndex + 1) % musicList.size
+        val nextMusic = musicList[currentTrackIndex]
+
+        // 再生中の曲情報を更新
+        currentMusicTitle = nextMusic.musicTitle
+        currentAlbumTitle = nextMusic.albumTitle
+        _currentMusicData.value = nextMusic
+
+        // 次の曲を再生準備
+        prepareAndPlay(getApplication(), nextMusic.audioFile)
+    }
+
     fun onPrevious(navController: NavController) {
         currentTrackIndex =
             if (currentTrackIndex - 1 < 0) trackList.size - 1 else currentTrackIndex - 1
@@ -124,6 +146,7 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         // 再生中の曲情報を更新
         currentMusicTitle = previousMusic.musicTitle
         currentAlbumTitle = previousMusic.albumTitle
+        _currentMusicData.value = previousMusic
 
         // 次の曲を再生準備
         prepareAndPlay(getApplication(), previousMusic.audioFile)
@@ -135,6 +158,21 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
                 inclusive = true
             }
         }
+    }
+
+    // ミニプレーヤー用：画面遷移しない前の楽曲
+    fun onPreviousMiniPlayer() {
+        currentTrackIndex =
+            if (currentTrackIndex - 1 < 0) trackList.size - 1 else currentTrackIndex - 1
+        val previousMusic = musicList[currentTrackIndex]
+
+        // 再生中の曲情報を更新
+        currentMusicTitle = previousMusic.musicTitle
+        currentAlbumTitle = previousMusic.albumTitle
+        _currentMusicData.value = previousMusic
+
+        // 前の曲を再生準備
+        prepareAndPlay(getApplication(), previousMusic.audioFile)
     }
 
     fun onClose(navController: NavController) {
