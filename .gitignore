@@ -39,3 +39,6 @@ gradle/wrapper/gradle-wrapper.jar
 # 環境変数ファイル
 .env
 app/src/main/assets/.env
+
+# メディアファイル
+app/src/main/assets/media/
