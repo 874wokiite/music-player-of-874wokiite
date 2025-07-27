@@ -11,6 +11,8 @@ composeBom = "2023.09.00"
 accompanist = "0.36.0"
 runtimeLivedata = "1.7.4"
 material3 = "1.4.0"
+awsSdk = "2.77.0"
+exoplayer = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +35,15 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-ui-font = { group = "androidx.compose.ui", name = "ui-text-google-fonts" } # バージョンはcompose-bomから取得
+
+# AWS SDK
+aws-android-sdk-core = { group = "com.amazonaws", name = "aws-android-sdk-core", version.ref = "awsSdk" }
+aws-android-sdk-s3 = { group = "com.amazonaws", name = "aws-android-sdk-s3", version.ref = "awsSdk" }
+
+# ExoPlayer
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

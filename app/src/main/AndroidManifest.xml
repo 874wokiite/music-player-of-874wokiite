@@ -40,6 +40,12 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        
+        <!-- AWS認証情報設定用Activity (オプション) -->
+        <activity
+            android:name=".utils.AwsCredentialsSetupActivity"
+            android:exported="false"
+            android:label="AWS認証情報設定" />
     </application>
 
 </manifest>
